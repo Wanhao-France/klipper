@@ -1,0 +1,262 @@
+# See docs/Config_Reference.md for a description of parameters.
+# These informations are based on the work of FLSUN and Guilouz https://github.com/Guilouz/
+
+########################################
+# Firmware settings
+########################################
+
+# FLSUN SUPER RACER MKS Robin Nano V3.0/V3.1
+
+# Configuring the firmware with "make menuconfig"
+#
+# [*] Enable extra low-level configuration options
+#     Micro-controller Architecture (STMicroelectronics STM32)  --->
+#     Processor model (STM32F407)  --->
+#     Bootloader offset (48KiB bootloader (MKS Robin Nano V3))  --->
+#     Clock Reference (8 MHz crystal)  --->
+#     Communication interface (USB (on PA11/PA12))  --->
+#     USB ids  --->
+# ()  GPIO pins to set at micro-controller startup (NEW)
+#
+# Note: The "make flash" command does not work with this board.
+# Rename the out/klipper.bin file to firmware.bin, copy it onto a
+# microSD card, insert it into the printer and reboot it.
+
+########################################
+# Printer Parameters
+########################################
+
+[printer]
+kinematics: delta
+max_velocity: 300
+max_accel: 3700
+max_accel_to_decel: 2000
+square_corner_velocity: 5
+max_z_velocity: 100
+max_z_accel: 1500
+minimum_z_position: -25
+print_radius: 132
+delta_radius: 151.7
+
+
+########################################
+# X Motor & Driver Parameters
+########################################
+
+[stepper_a]
+step_pin: PE3
+dir_pin: PE2
+enable_pin: !PE4
+microsteps: 16
+rotation_distance: 40
+endstop_pin: PA15
+homing_speed: 50
+homing_retract_dist: 5.0
+homing_retract_speed: 10
+angle: 210
+position_endstop: 336
+arm_length = 315
+
+[tmc2209 stepper_a]
+uart_pin: PD5
+run_current: 1.138
+hold_current: 0.5
+stealthchop_threshold: 999999
+
+
+########################################
+# Y Motor & Driver Parameters
+########################################
+
+[stepper_b]
+step_pin: PE0
+dir_pin: PB9
+enable_pin: !PE1
+microsteps: 16
+rotation_distance: 40
+endstop_pin: PD2
+angle: 330
+
+[tmc2209 stepper_b]
+uart_pin: PD7
+run_current: 1.138
+hold_current: 0.5
+stealthchop_threshold: 999999
+
+
+########################################
+# Z Motor & Driver Parameters
+########################################
+
+[stepper_c]
+step_pin: PB5
+dir_pin: PB4
+enable_pin: !PB8
+microsteps: 16
+rotation_distance: 40
+endstop_pin: PC4
+angle: 90
+
+[tmc2209 stepper_c]
+uart_pin: PD4
+run_current: 1.138
+hold_current: 0.5
+stealthchop_threshold: 999999
+
+
+########################################
+# Extruder & Driver Parameters
+########################################
+
+[extruder]
+step_pin: PD6
+dir_pin: !PD3
+enable_pin: !PB3
+microsteps: 16
+rotation_distance: 7.805
+full_steps_per_rotation: 200
+nozzle_diameter: 0.4
+filament_diameter: 1.750
+heater_pin: PE5
+sensor_type: EPCOS 100K B57560G104F
+sensor_pin: PC1
+min_temp: -5
+max_temp: 275
+max_extrude_cross_section: 110 
+max_extrude_only_distance: 1100
+#pressure_advance: 0.04
+#pressure_advance_smooth_time: 0.01
+control = pid
+pid_kp = 18.240
+pid_ki = 0.558
+pid_kd = 149.109
+
+[tmc2209 extruder]
+uart_pin: PD9
+run_current: 1.1
+hold_current: 0.5
+stealthchop_threshold: 999999
+
+########################################
+# Bed Parameters
+########################################
+
+[heater_bed]
+heater_pin: PA0
+sensor_type: EPCOS 100K B57560G104F
+sensor_pin: PC0
+min_temp: -5
+max_temp: 115
+control = pid
+pid_kp = 71.041
+pid_ki = 1.422
+pid_kd = 887.123
+
+########################################
+# Filament End Detector Parameters
+########################################
+
+[filament_switch_sensor filament_sensor]
+pause_on_runout: True
+runout_gcode: M600
+switch_pin: PA4
+
+########################################
+# Fan Parameters
+########################################
+
+[fan]
+pin: PC14
+
+[heater_fan Hotend]
+pin: PB0
+heater_temp: 50.0
+
+########################################
+# Probe Parameters
+########################################
+
+[probe]
+pin: !PC8
+x_offset: 0
+y_offset: 0
+z_offset: 0
+speed: 10
+lift_speed: 50
+samples: 3
+samples_result: average
+sample_retract_dist: 6
+samples_tolerance: 0.02
+samples_tolerance_retries: 5
+
+########################################
+# Delta Calibration & Mesh Parameters
+########################################
+
+[delta_calibrate]
+radius: 130
+horizontal_move_z: 30
+speed: 100
+
+[bed_mesh]
+speed: 100
+horizontal_move_z: 30
+mesh_radius: 130
+mesh_origin: 0,0
+mesh_pps: 4,4
+round_probe_count: 9
+algorithm: bicubic
+bicubic_tension: 0.1
+move_check_distance: 3
+#fade_start: 1
+#fade_end: 30
+
+########################################
+# Temperature Controls
+########################################
+
+[verify_heater extruder]
+max_error: 500
+hysteresis: 20
+
+[verify_heater heater_bed]
+max_error: 120
+hysteresis: 5
+
+########################################
+# Firmware Retraction Parameters
+########################################
+
+[firmware_retraction]
+retract_length: 6.5
+retract_speed: 35
+unretract_extra_length: 0.05
+unretract_speed: 35
+
+########################################
+# Resonance Compensation Parameters
+########################################
+
+[input_shaper]
+shaper_freq_x: 25.00
+shaper_type_x = mzv
+shaper_freq_y: 23.29
+shaper_type_y = mzv
+
+########################################
+# MCU Parameters
+########################################
+
+[mcu]
+serial: /dev/serial/by-id/usb-Klipper_stm32f407xx_4F003F000150344D30343820-if00
+restart_method: command
+
+[temperature_sensor Raspberry_Pi]
+sensor_type: temperature_host
+min_temp: 10
+max_temp: 100
+
+[temperature_sensor Motherboard]
+sensor_type: temperature_mcu
+min_temp: 0
+max_temp: 100
